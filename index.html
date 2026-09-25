@@ -120,6 +120,7 @@ $("loginForm").onsubmit = e => {
   e.preventDefault();
   const u=$("username").value.trim(), p=$("password").value;
   if (!/^[0-9]{1,6}$/.test(p)) {
+
     alert("Password harus berupa angka dan maksimal 6 digit.");
     return;
   }
