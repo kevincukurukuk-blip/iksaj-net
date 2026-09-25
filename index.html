@@ -123,13 +123,38 @@ $("loginForm").onsubmit = e => {
     alert("Password harus berupa angka dan maksimal 6 digit.");
     return;
   }
-  if (u === "operator" && p === "123456") {
-    alert("Login Operator demo berhasil. Dashboard Operator akan dikembangkan pada versi berikutnya.");
-  } else if (u === "anggota001" && p === "123456") {
-    show("member");
-  } else {
-    alert("Akun demo: anggota001 / 123456");
+try {
+  const res = await fetch(
+    SUPABASE_URL +
+    "/rest/v1/operator?username=eq." +
+    encodeURIComponent(u) +
+    "&aktif=eq.true&select=username,password,aktif",
+    {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: "Bearer " + SUPABASE_ANON_KEY
+      }
+    }
+  );
+
+  const data = await res.json();
+
+  if (data.length > 0 && data[0].password === p) {
+    alert("Login Operator berhasil!");
+    return;
   }
+
+  if (u === "anggota001" && p === "123456") {
+    show("member");
+    return;
+  }
+
+  alert("Username atau password salah.");
+
+} catch (error) {
+  console.error(error);
+  alert("Gagal terhubung ke server.");
+}
 };
 $("registerForm").onsubmit = async e => {
   e.preventDefault();
