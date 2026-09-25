@@ -79,7 +79,38 @@ input:focus,textarea:focus{border-color:#397b62}
     <p>Selamat datang di IKSAJ NET.</p>
     <button class="btn primary" id="toLogin">Masuk ke Login</button>
   </section>
+<section id="operator" class="dashboard hidden">
+  <div class="top">
+    <div>
+      <h2 style="margin:0">Dashboard Operator</h2>
+      <div class="small">Selamat datang di IKSAJ NET 👋</div>
+    </div>
+    <span class="badge">OPERATOR</span>
+  </div>
 
+  <div class="card" style="max-width:none;margin-bottom:12px">
+    <b>Panel Pengelolaan IKSAJ NET</b>
+    <p class="small">
+      Kelola anggota, pendaftar, kegiatan, absensi, dan informasi IKSAJ.
+    </p>
+  </div>
+
+  <div class="grid">
+    <button class="tile">📝<b>Pendaftar Baru</b><span class="small">Periksa pendaftaran</span></button>
+    <button class="tile">👥<b>Data Anggota</b><span class="small">Kelola anggota</span></button>
+    <button class="tile">🔐<b>Kelola Akun</b><span class="small">Akun anggota</span></button>
+    <button class="tile">📅<b>Kegiatan</b><span class="small">Kelola kegiatan</span></button>
+    <button class="tile">✅<b>Absensi</b><span class="small">Kelola kehadiran</span></button>
+    <button class="tile">📢<b>Pengumuman</b><span class="small">Informasi IKSAJ</span></button>
+    <button class="tile">📸<b>Dokumentasi</b><span class="small">Foto kegiatan</span></button>
+    <button class="tile">🧑‍🎓<b>Ruang Santri</b><span class="small">Review karya santri</span></button>
+    <button class="tile">📊<b>Rekap</b><span class="small">Lihat rekap data</span></button>
+    <button class="tile">🔔<b>Notifikasi</b><span class="small">Pemberitahuan</span></button>
+    <button class="tile">⚙️<b>Pengaturan</b><span class="small">Pengaturan sistem</span></button>
+  </div>
+
+  <button class="btn secondary" id="logoutOperator">Keluar Operator</button>
+</section>
   <section id="member" class="dashboard hidden">
     <div class="top">
       <div><h2 style="margin:0">Assalamu'alaikum 👋</h2><div class="small">Selamat datang di IKSAJ NET</div></div>
@@ -142,6 +173,7 @@ try {
 
   if (data.length > 0 && data[0].password === p) {
     alert("Login Operator berhasil!");
+    show("operator");
     return;
   }
 
