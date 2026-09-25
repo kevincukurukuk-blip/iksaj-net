@@ -116,7 +116,7 @@ $("newMember").onclick = () => show("register");
 $("backLogin").onclick = () => show("login");
 $("toLogin").onclick = () => show("login");
 $("forgot").onclick = () => alert("Untuk prototype: permintaan Lupa Password akan diproses Operator pada versi berikutnya.");
-$("loginForm").onsubmit = e => {
+$("loginForm").onsubmit = async e => {
   e.preventDefault();
   const u=$("username").value.trim(), p=$("password").value;
   if (!/^[0-9]{1,6}$/.test(p)) {
