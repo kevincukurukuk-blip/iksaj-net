@@ -236,6 +236,121 @@ $("registerForm").onsubmit = async e => {
   show("success");
 };
 $("logoutMember").onclick=()=>show("login");
+  const pendaftarBtn = [...document.querySelectorAll(".tile")]
+  .find(x => x.innerText.includes("Pendaftar Baru"));
+
+async function bukaPendaftar() {
+  let box = document.getElementById("pendaftarPanel");
+
+  if (!box) {
+    box = document.createElement("div");
+    box.id = "pendaftarPanel";
+    box.style.cssText =
+      "position:fixed;inset:0;background:#f5f8f6;z-index:9999;overflow:auto;padding:20px;";
+    document.body.appendChild(box);
+  }
+
+  box.innerHTML = `
+    <div style="max-width:700px;margin:auto">
+      <button onclick="document.getElementById('pendaftarPanel').remove()"
+        style="border:0;background:none;font-size:18px;margin-bottom:15px">
+        ← Kembali
+      </button>
+
+      <h2>📝 Pendaftar Baru</h2>
+      <p class="small">Daftar santri yang menunggu pemeriksaan Operator.</p>
+      <div id="daftarPendaftar">Memuat data...</div>
+    </div>
+  `;
+
+  try {
+    const res = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/pendaftar?select=*&order=created_at.desc",
+      {
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: "Bearer " + SUPABASE_ANON_KEY
+        }
+      }
+    );
+
+    const data = await res.json();
+    const area = document.getElementById("daftarPendaftar");
+
+    if (!data.length) {
+      area.innerHTML = "<p>Belum ada pendaftar.</p>";
+      return;
+    }
+
+    area.innerHTML = data.map(x => `
+      <div class="card" style="margin-bottom:15px;max-width:none">
+        <h3 style="margin-top:0">${x.nama_lengkap || "-"}</h3>
+
+        <p>📱 ${x.nomor_telepon || "-"}</p>
+        <p>🏠 ${x.alamat || "-"}</p>
+        <p>🎓 ${x.dari_pesantren || "-"}</p>
+        <p><b>Status:</b> ${x.status || "Menunggu Review"}</p>
+
+        ${
+          x.status === "Menunggu Review"
+          ? `
+            <button class="btn primary"
+              onclick="ubahStatusPendaftar(${x.id}, 'Disetujui')">
+              ✅ Approve
+            </button>
+
+            <button class="btn secondary"
+              onclick="ubahStatusPendaftar(${x.id}, 'Ditolak')">
+              ❌ Reject
+            </button>
+          `
+          : ""
+        }
+      </div>
+    `).join("");
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById("daftarPendaftar").innerHTML =
+      "<p>Gagal mengambil data pendaftar.</p>";
+  }
+}
+
+async function ubahStatusPendaftar(id, status) {
+  if (!confirm("Ubah status pendaftar menjadi " + status + "?")) return;
+
+  try {
+    const res = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/pendaftar?id=eq." +
+      id,
+      {
+        method: "PATCH",
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: "Bearer " + SUPABASE_ANON_KEY,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal"
+        },
+        body: JSON.stringify({ status: status })
+      }
+    );
+
+    if (!res.ok) throw new Error(await res.text());
+
+    alert("Status berhasil diubah.");
+    bukaPendaftar();
+
+  } catch (err) {
+    console.error(err);
+    alert("Gagal mengubah status.");
+  }
+}
+
+if (pendaftarBtn) {
+  pendaftarBtn.onclick = bukaPendaftar;
+}
 </script>
 </body>
 </html>
