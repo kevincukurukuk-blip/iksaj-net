@@ -296,13 +296,11 @@ async function bukaPendaftar() {
           x.status === "Menunggu Review"
           ? `
             <button class="btn primary"
-              onclick="ubahStatusPendaftar(${x.id}, 'Disetujui')">
-              ✅ Approve
+              onclick="ubahStatusPendaftar(${x.id}, 'approved')"
             </button>
 
             <button class="btn secondary"
-              onclick="ubahStatusPendaftar(${x.id}, 'Ditolak')">
-              ❌ Reject
+              onclick="ubahStatusPendaftar(${x.id}, 'rejected')"
             </button>
           `
           : ""
